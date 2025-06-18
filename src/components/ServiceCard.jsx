@@ -2,7 +2,6 @@ import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import PropTypes from "prop-types";
-import ColorfulBackground from "./VantaHaloBackground";
 
 const ServiceCard = ({ service, index }) => {
   const cardRef = useRef(null);
@@ -10,8 +9,8 @@ const ServiceCard = ({ service, index }) => {
   const [inView, setInView] = useState(false);
 
   const col = index % 3;
+  const row = Math.floor(index / 3);
 
-  // Entry trigger
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -21,46 +20,42 @@ const ServiceCard = ({ service, index }) => {
     );
 
     if (cardRef.current) observer.observe(cardRef.current);
-    return () => {
-      if (cardRef.current) observer.unobserve(cardRef.current);
-    };
+    return () => observer.disconnect();
   }, []);
 
-  // Entry animation
   useEffect(() => {
-    if (inView) {
+    if (inView && cardRef.current) {
+      const delay = row * 0.3 + col * 0.15;
       gsap.fromTo(
         cardRef.current,
-        { opacity: 0, y: 60, scale: 0.9 },
+        { opacity: 0, y: 80, scale: 0.9 },
         {
           opacity: 1,
           y: 0,
           scale: 1,
           duration: 1,
-          delay: index * 0.15,
+          delay,
           ease: "power3.out",
         }
       );
     }
-  }, [inView, index]);
+  }, [inView]);
 
-  // Hover 3D tilt effect
   const handleMouseMove = (e) => {
-    const card = cardRef.current;
-    const rect = card.getBoundingClientRect();
+    const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const rotateY = ((x - centerX) / centerX) * 12;
-    const rotateX = ((centerY - y) / centerY) * 12;
+    const rotateY = ((x - centerX) / centerX) * 10;
+    const rotateX = ((centerY - y) / centerY) * 10;
 
-    gsap.to(card, {
+    gsap.to(cardRef.current, {
       rotateX,
       rotateY,
-      scale: 1.07,
-      duration: 0.4,
-      ease: "power3.out",
+      scale: 1.05,
+      duration: 0.3,
+      ease: "power2.out",
     });
   };
 
@@ -69,25 +64,21 @@ const ServiceCard = ({ service, index }) => {
       rotateX: 0,
       rotateY: 0,
       scale: 1,
-      duration: 0.4,
-      ease: "power3.out",
+      duration: 0.3,
+      ease: "power2.out",
     });
   };
 
   const handleClick = () => {
-    const tl = gsap.timeline({
+    gsap.to(cardRef.current, {
+      x: 0,
+      y: -100,
+      scale: 0.8,
+      opacity: 0,
+      duration: 0.4,
+      ease: "power2.inOut",
       onComplete: () => navigate(`/services/${service.id}`),
     });
-
-    const exitAnim = {
-      x: col === 0 ? -300 : col === 2 ? 300 : 0,
-      scale: col === 1 ? 0 : 1,
-      opacity: 0,
-      duration: 0.6,
-      ease: col === 1 ? "back.in(1.5)" : "power2.inOut",
-    };
-
-    tl.to(cardRef.current, exitAnim);
   };
 
   return (
@@ -101,56 +92,43 @@ const ServiceCard = ({ service, index }) => {
         transformStyle: "preserve-3d",
         padding: "1.5rem",
         borderRadius: "1.5rem",
-        background: `
-          linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1)),
-          radial-gradient(circle at top left, rgba(255, 255, 255, 0.15), transparent 60%)
-        `,
-        border: "1px solid rgba(255, 255, 255, 0.15)",
-        boxShadow: `
-          0 15px 35px rgba(0, 0, 0, 0.4),
-          inset 0 0 30px rgba(255, 255, 255, 0.05),
-          0 0 15px rgba(255, 255, 255, 0.05)
-        `,
-        backdropFilter: "blur(18px)",
-        WebkitBackdropFilter: "blur(18px)",
-        color: "#fff",
+        background: `linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.1))`,
+        border: "1px solid rgba(255,255,255,0.15)",
+        boxShadow: "0 15px 35px rgba(0,0,0,0.3)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        color: "white",
         cursor: "pointer",
         height: "100%",
         transition: "transform 0.3s ease",
-        willChange: "transform",
-        transformOrigin: "center",
-        overflow: "hidden",
         position: "relative",
+        zIndex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
       }}
     >
-      {/* Optional Glow Overlay */}
-      <div
+      {/* ✅ Thumbnail image added */}
+      <img
+        src={service?.image}
+        alt={service?.title}
         style={{
-          position: "absolute",
-          top: "-40%",
-          left: "-40%",
-          width: "180%",
-          height: "180%",
-          background: "radial-gradient(circle, rgba(255,255,255,0.06), transparent 60%)",
-          pointerEvents: "none",
-          zIndex: 0,
+          width: "80px",
+          height: "80px",
+          objectFit: "cover",
+          borderRadius: "0.75rem",
+          marginBottom: "1rem",
+          boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
         }}
       />
-      <div style={{ position: "relative", zIndex: 1 }}>
-        <h3
-          style={{
-            fontSize: "1.5rem",
-            fontWeight: "700",
-            marginBottom: "0.5rem",
-          }}
-        >
-          
-          {service.title}
-        </h3>
-        <p style={{ opacity: 0.85, lineHeight: 1.6 }}>
-          {service.description.slice(0, 90)}...
-        </p>
-      </div>
+
+      <h3 style={{ fontSize: "1.3rem", fontWeight: "bold", marginBottom: "0.5rem" }}>
+        {service?.title}
+      </h3>
+      <p style={{ opacity: 0.85, lineHeight: 1.6 }}>
+        {service?.description?.slice(0, 90)}...
+      </p>
     </div>
   );
 };
@@ -160,6 +138,7 @@ ServiceCard.propTypes = {
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
   }).isRequired,
   index: PropTypes.number.isRequired,
 };

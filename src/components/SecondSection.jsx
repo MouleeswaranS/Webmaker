@@ -129,7 +129,7 @@ const AboutSection = () => {
   }, []);
 
   return (
-    <section
+    <section id="#AboutUs"
       ref={sectionRef}
       className="relative w-full min-h-screen overflow-hidden px-4 md:px-12 py-20 md:py-32 text-black bg-[#0a0016]"
     >

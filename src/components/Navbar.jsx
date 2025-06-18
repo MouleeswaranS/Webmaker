@@ -13,8 +13,13 @@ const Navbar = ({ loading }) => {
   const toggleMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
   const menuItems = [
-    'Home', 'About us', 'Our Services',
-    'Portfolio', 'Pricing', 'Shop', 'Contact us',
+    { name: 'Home', href: '#Home' },
+    { name: 'About us', href: '#AboutUs' },
+    { name: 'Our Services', href: '#Service' },
+    { name: 'Portfolio', href: '#Portfolio' },
+    { name: 'Pricing', href: '#Pricing' },
+    { name: 'Shop', href: '#Shop' },
+    { name: 'Contact us', href: '#Contact' },
   ];
 
   useEffect(() => {
@@ -25,10 +30,7 @@ const Navbar = ({ loading }) => {
   }, [loading]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 100);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -41,60 +43,41 @@ const Navbar = ({ loading }) => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -30 }}
           transition={{ duration: 1 }}
-          className={`w-full top-0 left-0 z-50 fixed transition-all duration-500 ${
-            isScrolled ? 'backdrop-blur-lg bg-white/80 shadow-lg scale-[0.98]' : ''
+          className={`w-[95%] fixed top-4 left-1/2 -translate-x-1/2 z-[999] transition-all duration-500 ${
+            isScrolled ? 'bg-black shadow-lg scale-[0.98] rounded-full' : 'bg-black rounded-full'
           }`}
         >
-          {/* Top Contact Bar */}
-          <div className="w-full bg-white text-black text-sm flex justify-between px-6 py-2 font-medium">
-            <div className="flex items-center space-x-2">
-              <FaLocationDot className="text-purple-600" />
-              <span>Pondicherry</span>
+          {/* ✅ Show Top Contact Bar ONLY when NOT scrolled */}
+          {!isScrolled && (
+            <div className="w-full bg-white text-black text-sm flex justify-between px-6 py-2 font-medium rounded-t-full">
+              <div className="flex items-center space-x-2">
+                <FaLocationDot className="text-purple-600" />
+                <span>Pondicherry</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <FaPhone className="text-green-600" />
+                <span>+91 96262 66254</span>
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <FaPhone className="text-green-600" />
-              <span>+91 96262 66254</span>
-            </div>
-          </div>
+          )}
 
           {/* Main Navbar */}
-<nav className="w-[92%] mx-auto px-6 py-7 flex items-center justify-between bg-black text-gray-50 rounded-full">
+          <nav className="w-[92%] mx-auto px-9 py-6 flex items-center justify-between bg-black text-gray-50 rounded-full">
             {/* Logo */}
-            <div className="flex items-center space-x-2 cursor-hover-target">
+            <div className="flex items-center space-x-2 cursor-pointer">
               <img src={logo} alt="Logo" className="h-10 w-auto rounded-full" />
-              <span className="font-bold text-xl"> Web Makerz </span>
+              <span className="font-bold text-xl">Web Makerz</span>
             </div>
 
-            {/* Menu items */}
-            <ul className="hidden md:flex space-x-6 text-3xl font-semibold">
+            {/* ✅ Menu items FIXED */}
+            <ul className="hidden md:flex space-x-6 text-xl font-semibold">
               {menuItems.map((item) => (
-                <li key={item}>
+                <li key={item.name}>
                   <a
-                    href="#Home"
-                    className="cursor-hover-target hover:text-pink-400 transition text-white text-2xl"
+                    href={item.href}
+                    className="hover:text-pink-400 transition text-white"
                   >
-                    <a
-                    href="#About Us"
-                    className="cursor-hover-target hover:text-pink-400 transition text-white text-2xl"
-                  >
-                    <a
-                    href="#Service"
-                    className="cursor-hover-target hover:text-pink-400 transition text-white text-2xl"
-                  >
-                    <a
-                    href="#Home"
-                    className="cursor-hover-target hover:text-pink-400 transition text-white text-2xl"
-                  >
-                    <a
-                    href="#Home"
-                    className="cursor-hover-target hover:text-pink-400 transition text-white text-2xl"
-                  >
-
-                  </a>
-                  </a>
-                  </a>
-                  </a>
-                    {item}
+                    {item.name}
                   </a>
                 </li>
               ))}
@@ -102,56 +85,55 @@ const Navbar = ({ loading }) => {
 
             {/* Contact Button */}
             <div className="hidden md:flex">
-              <button className="cursor-hover-target bg-white text-black font-medium px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-gray-200 transition">
-                <span className="cursor-pointer">Contact us</span>
+              <button className="bg-white text-black font-medium px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-gray-200 transition">
+                <span>Contact us</span>
                 <FaArrowRight />
               </button>
             </div>
 
-            {/* Mobile toggle button */}
-{/* Mobile toggle button */}
-<button
-  onClick={toggleMenu}
-  className="md:hidden text-white text-3xl z-50 cursor-pointer absolute right-6 top-[4.3rem]"
->
-  {mobileMenuOpen ? <FaTimes /> : <FaBars />}
-</button>
-
-{/* Mobile Menu Drawer */}
-<AnimatePresence>
-  {mobileMenuOpen && (
-    <motion.div
-      initial={{ x: '100%' }}
-      animate={{ x: 0 }}
-      exit={{ x: '100%' }}
-      transition={{ duration: 0.4, ease: 'easeInOut' }}
-      className="md:hidden fixed top-0 right-0 h-full w-3/4 bg-black text-white z-40 px-6 pt-24"
-    >
-      <ul className="flex flex-col space-y-6 text-xl font-semibold">
-        {menuItems.map((item) => (
-          <li key={item}>
-            <a
-              href={`#${item.replace(/\s+/g, '')}`}
+            {/* Mobile Toggle */}
+            <button
               onClick={toggleMenu}
-              className="cursor-hover-target hover:text-pink-400 transition"
+              className="md:hidden text-white text-3xl z-50 cursor-pointer absolute right-6 top-[4.3rem]"
             >
-              {item}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <button
-        onClick={toggleMenu}
-        className="mt-8 bg-white text-black font-medium px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-gray-200 transition"
-      >
-        <span className="cursor-pointer">Contact us</span>
-        <FaArrowRight />
-      </button>
-    </motion.div>
-  )}
-</AnimatePresence>
-        </nav>
-      </motion.div>
+              {mobileMenuOpen ? <FaTimes /> : <FaBars />}
+            </button>
+
+            {/* Mobile Menu Drawer */}
+            <AnimatePresence>
+              {mobileMenuOpen && (
+                <motion.div
+                  initial={{ x: '100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: '100%' }}
+                  transition={{ duration: 0.4, ease: 'easeInOut' }}
+                  className="md:hidden fixed top-0 right-0 h-full w-3/4 bg-black text-white z-40 px-6 pt-24"
+                >
+                  <ul className="flex flex-col space-y-6 text-xl font-semibold">
+                    {menuItems.map((item) => (
+                      <li key={item.name}>
+                        <a
+                          href={item.href}
+                          onClick={toggleMenu}
+                          className="hover:text-pink-400 transition"
+                        >
+                          {item.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    onClick={toggleMenu}
+                    className="mt-8 bg-white text-black font-medium px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-gray-200 transition"
+                  >
+                    <span className="cursor-pointer">Contact us</span>
+                    <FaArrowRight />
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </nav>
+        </motion.div>
       )}
     </AnimatePresence>
   );
