@@ -25,7 +25,7 @@ const ServiceCard = ({ service, index }) => {
     return () => observer.disconnect();
   }, []);
 
-  // Cool GSAP animation
+  // GSAP entrance animation
   useEffect(() => {
     if (inView && cardRef.current && !hasAnimatedIn) {
       const delay = row * 0.2 + col * 0.1;
@@ -35,6 +35,7 @@ const ServiceCard = ({ service, index }) => {
         {
           opacity: 0,
           y: 60,
+          scale: 1,
           filter: "blur(6px)",
         },
         {
@@ -50,23 +51,29 @@ const ServiceCard = ({ service, index }) => {
     }
   }, [inView, hasAnimatedIn]);
 
-  // Optional subtle glow on hover
+  // Smooth hover animation (GSAP only)
   const handleMouseEnter = () => {
     gsap.to(cardRef.current, {
-      boxShadow: "0 0 20px rgba(255, 255, 255, 0.08)",
-      duration: 0.3,
-      ease: "power2.out",
+      scale: 1.03,
+      y: -8,
+      boxShadow: "0 0 25px rgba(0, 255, 255, 0.35)",
+      duration: 0.4,
+      ease: "power3.out",
     });
   };
 
   const handleMouseLeave = () => {
     gsap.to(cardRef.current, {
-      boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
-      duration: 0.3,
-      ease: "power2.out",
+      scale: 1,
+      y: 0,
+      boxShadow: "0 8px 24px rgba(0, 0, 0, 0.5)",
+      duration: 0.4,
+      ease: "power3.out",
+      clearProps: "scale,y,boxShadow", // reset cleanly
     });
   };
 
+  // Click effect + navigate
   const handleClick = () => {
     gsap.to(cardRef.current, {
       opacity: 0,
@@ -92,9 +99,9 @@ const ServiceCard = ({ service, index }) => {
         borderRadius: "1rem",
         overflow: "hidden",
         cursor: "pointer",
-        transition: "box-shadow 0.3s ease",
         boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
-        opacity: 0,
+        willChange: "transform, box-shadow, opacity", // hint for performance
+        opacity: 0, // initial state, animated by GSAP
       }}
     >
       <img
