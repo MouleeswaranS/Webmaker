@@ -57,63 +57,71 @@ const ServiceDetail = () => {
         backgroundColor: "#0c0c0c",
       }}
     >
-      {/* Glowing animated ribbon background */}
+      {/* Glowing animated background */}
       <div className="glow-ribbon" />
 
-      {/* Main content */}
+      {/* Centered container */}
       <div
         style={{
-          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "calc(100vh - 8rem)", // adjusts for nav height
           zIndex: 2,
-          maxWidth: "850px",
-          margin: "0 auto",
-          padding: "2.5rem",
-          background: "rgba(0, 0, 0, 0.75)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          borderRadius: "1.25rem",
-          boxShadow: "0 0 40px rgba(0, 255, 255, 0.05)",
-          backdropFilter: "blur(16px)",
         }}
       >
-        <h1 style={{ fontSize: "2.75rem", marginBottom: "1rem", color: "#00ffff" }}>
-          {service.title}
-        </h1>
-
-        <p style={{ fontSize: "1.15rem", marginBottom: "2rem", lineHeight: "1.8" }}>
-          {service.description}
-        </p>
-
-        <h3 style={{ fontSize: "1.4rem", marginBottom: "1rem", color: "#ff99ff" }}>
-          Customer Benefits
-        </h3>
-
-        <ul style={{ marginBottom: "2.5rem", paddingLeft: "1rem" }}>
-          {service.benefits.map((benefit, i) => (
-            <li key={i} style={{ marginBottom: "0.75rem", fontSize: "1rem" }}>
-              🌟 {benefit}
-            </li>
-          ))}
-        </ul>
-
-        <Link
-          to="/"
+        <div
           style={{
-            display: "inline-block",
-            padding: "0.85rem 1.5rem",
-            backgroundColor: "#00f0ff",
-            color: "#000",
-            borderRadius: "10px",
-            fontWeight: 600,
-            fontSize: "1rem",
-            textDecoration: "none",
-            boxShadow: "0 0 12px #00f0ff",
-            transition: "transform 0.25s",
+            maxWidth: "850px",
+            width: "100%",
+            padding: "2.5rem",
+            background: "rgba(0, 0, 0, 0.75)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            borderRadius: "1.25rem",
+            boxShadow: "0 0 40px rgba(0, 255, 255, 0.05)",
+            backdropFilter: "blur(16px)",
           }}
-          onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-          onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
-          ⬅ Back to Services
-        </Link>
+          <h1 style={{ fontSize: "2.75rem", marginBottom: "1rem", color: "#00ffff" }}>
+            {service.title}
+          </h1>
+
+          <p style={{ fontSize: "1.15rem", marginBottom: "2rem", lineHeight: "1.8" }}>
+            {service.description}
+          </p>
+
+          <h3 style={{ fontSize: "1.4rem", marginBottom: "1rem", color: "#ff99ff" }}>
+            Customer Benefits
+          </h3>
+
+          <ul style={{ marginBottom: "2.5rem", paddingLeft: "1rem" }}>
+            {service.benefits.map((benefit, i) => (
+              <li key={i} style={{ marginBottom: "0.75rem", fontSize: "1rem" }}>
+                🌟 {benefit}
+              </li>
+            ))}
+          </ul>
+
+          <Link
+            to="/"
+            style={{
+              display: "inline-block",
+              padding: "0.85rem 1.5rem",
+              backgroundColor: "#00f0ff",
+              color: "#000",
+              borderRadius: "10px",
+              fontWeight: 600,
+              fontSize: "1rem",
+              textDecoration: "none",
+              boxShadow: "0 0 12px #00f0ff",
+              transition: "transform 0.25s",
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          >
+            ⬅ Back to Services
+          </Link>
+        </div>
       </div>
     </motion.section>
   );
