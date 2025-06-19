@@ -8,6 +8,7 @@ import Cursor from "./components/Cursor";
 import Loading from "./components/Loading";
 import ServiceDetail from "./components/ServiceDetail";
 import ServiceSection from "./components/ServiceSection";
+import PortfolioSection from "./components/PortfolioSection";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -32,7 +33,11 @@ function App() {
                   <>
                     <Hero />
                     <SecondSection />
-                    <ServiceSection /> {/* ✅ Use directly here */}
+                     <ServiceSection />
+                      < PortfolioSection />
+                    
+                   
+                    {/* ✅ Use directly here */}
                   </>
                 }
               />
@@ -41,7 +46,10 @@ function App() {
           </>
         )}
       </main>
+      
+      
     </BrowserRouter>
+    
   );
 }
 
