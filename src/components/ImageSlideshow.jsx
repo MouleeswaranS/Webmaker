@@ -77,7 +77,7 @@ const ImageSlideshow = () => {
             ref={(el) => (imgRefs.current[index] = el)}
             src={img.src}
             alt={`floating-${index}`}
-            className="w-17 md:w-25 rounded-xl shadow-lg opacity-90"
+            className="w-11 md:w-25 rounded-xl shadow-lg opacity-90"
             style={{ transform: `rotate(${img.rotation}deg)` }}
           />
         </div>
