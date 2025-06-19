@@ -5,6 +5,10 @@ import PropTypes from "prop-types";
 
 const ServiceCard = ({ service, index }) => {
   const cardRef = useRef(null);
+  const imageRef = useRef(null);
+  const titleRef = useRef(null);
+  const descRef = useRef(null);
+
   const navigate = useNavigate();
   const [inView, setInView] = useState(false);
   const [hasAnimatedIn, setHasAnimatedIn] = useState(false);
@@ -12,7 +16,6 @@ const ServiceCard = ({ service, index }) => {
   const col = index % 3;
   const row = Math.floor(index / 3);
 
-  // Intersection Observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -25,33 +28,51 @@ const ServiceCard = ({ service, index }) => {
     return () => observer.disconnect();
   }, []);
 
-  // GSAP entrance animation
   useEffect(() => {
     if (inView && cardRef.current && !hasAnimatedIn) {
-      const delay = row * 0.2 + col * 0.1;
+      const delay = row * 0.25 + col * 0.15;
 
       gsap.fromTo(
         cardRef.current,
-        {
-          opacity: 0,
-          y: 60,
-          scale: 1,
-          filter: "blur(6px)",
-        },
+        { opacity: 0, y: 80, filter: "blur(12px)" },
         {
           opacity: 1,
           y: 0,
           filter: "blur(0px)",
-          duration: 1,
+          duration: 1.2,
           delay,
-          ease: "power3.out",
-          onComplete: () => setHasAnimatedIn(true),
+          ease: "power4.out",
         }
       );
+
+      gsap.from(imageRef.current, {
+        opacity: 0,
+        scale: 0.95,
+        y: 30,
+        delay: delay + 0.2,
+        duration: 1,
+        ease: "expo.out",
+      });
+
+      gsap.from(titleRef.current, {
+        opacity: 0,
+        x: -60,
+        delay: delay + 0.4,
+        duration: 1,
+        ease: "expo.out",
+      });
+
+      gsap.from(descRef.current, {
+        opacity: 0,
+        x: 60,
+        delay: delay + 0.55,
+        duration: 1,
+        ease: "expo.out",
+        onComplete: () => setHasAnimatedIn(true),
+      });
     }
   }, [inView, hasAnimatedIn]);
 
-  // Smooth hover animation (GSAP only)
   const handleMouseEnter = () => {
     gsap.to(cardRef.current, {
       scale: 1.03,
@@ -69,11 +90,10 @@ const ServiceCard = ({ service, index }) => {
       boxShadow: "0 8px 24px rgba(0, 0, 0, 0.5)",
       duration: 0.4,
       ease: "power3.out",
-      clearProps: "scale,y,boxShadow", // reset cleanly
+      clearProps: "scale,y,boxShadow",
     });
   };
 
-  // Click effect + navigate
   const handleClick = () => {
     gsap.to(cardRef.current, {
       opacity: 0,
@@ -100,11 +120,12 @@ const ServiceCard = ({ service, index }) => {
         overflow: "hidden",
         cursor: "pointer",
         boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
-        willChange: "transform, box-shadow, opacity", // hint for performance
-        opacity: 0, // initial state, animated by GSAP
+        willChange: "transform, box-shadow, opacity",
+        opacity: 0,
       }}
     >
       <img
+        ref={imageRef}
         src={service?.image}
         alt={service?.title}
         style={{
@@ -116,10 +137,16 @@ const ServiceCard = ({ service, index }) => {
       />
 
       <div style={{ padding: "1.5rem" }}>
-        <h3 style={{ fontSize: "1.8rem", fontWeight: "bold", marginBottom: "1rem" }}>
+        <h3
+          ref={titleRef}
+          style={{ fontSize: "1.8rem", fontWeight: "bold", marginBottom: "1rem" }}
+        >
           {service?.title}
         </h3>
-        <p style={{ fontSize: "1rem", color: "#ccc", lineHeight: "1.6" }}>
+        <p
+          ref={descRef}
+          style={{ fontSize: "1rem", color: "#ccc", lineHeight: "1.6" }}
+        >
           {service?.description?.slice(0, 160)}...
         </p>
       </div>
