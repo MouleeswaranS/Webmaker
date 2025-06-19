@@ -142,7 +142,7 @@ const Navbar = ({ loading }) => {
         )}
       </AnimatePresence>
 
-      {/* ✅ Properly Positioned Contact Modal */}
+      {/* 🔥 Stunning Contact Modal */}
       <AnimatePresence>
         {showContactModal && (
           <motion.div
@@ -153,40 +153,43 @@ const Navbar = ({ loading }) => {
             onClick={closeContactModal}
           >
             <motion.div
-              className="bg-white text-black w-[90%] max-w-md rounded-xl p-6 relative shadow-2xl"
+              className="relative w-[90%] max-w-md rounded-2xl p-6 shadow-2xl text-white bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-700 via-pink-500 to-yellow-400 backdrop-blur-lg border border-white/20 overflow-hidden"
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 20, opacity: 0 }}
               transition={{ duration: 0.3 }}
               onClick={(e) => e.stopPropagation()}
             >
+              {/* Animated background swirl */}
+              <div className="absolute inset-0 z-0 opacity-30 bg-[conic-gradient(from_180deg_at_50%_50%,#ff00cc,#3333ff,#ffcc00,#ff00cc)] animate-spin-slow rounded-2xl blur-2xl"></div>
+
               <button
-                className="absolute top-3 right-3 text-gray-600 text-lg"
+                className="absolute top-3 right-3 text-white text-lg z-10"
                 onClick={closeContactModal}
               >
                 <FaTimes />
               </button>
 
-              <h2 className="text-2xl font-bold mb-4 text-center">Contact Us</h2>
+              <h2 className="text-2xl font-bold mb-4 text-center relative z-10">Contact Us</h2>
 
-              <div className="space-y-4">
+              <div className="space-y-4 relative z-10">
                 <input
                   type="text"
                   placeholder="Your phone number"
-                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-2 bg-white/10 text-white border border-white/30 rounded focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-white"
                 />
                 <input
                   type="email"
                   placeholder="Your email address"
-                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-2 bg-white/10 text-white border border-white/30 rounded focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-white"
                 />
                 <textarea
                   placeholder="Your message..."
                   rows="4"
-                  className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-2 bg-white/10 text-white border border-white/30 rounded focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-white"
                 />
                 <button
-                  className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition w-full"
+                  className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition w-full font-semibold"
                   onClick={() => {
                     alert('Submitted!');
                     closeContactModal();
