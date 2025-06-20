@@ -309,7 +309,7 @@ const HeroSection = () => {
       <div className="absolute top-40 left-25 z-30 pointer-events-none">
         <div
           ref={techOrbitRef}
-          className="relative w-[16rem] h-[16rem]" 
+          className="relative w-[13rem] h-[13rem]" 
           style={{ transformOrigin: "center center" }}>
           <img src={reactLogo} className="absolute top-0 left-1/2 w-16 h-16 -translate-x-1/2 rounded-full shadow-lg shadow-cyan-400/30" />
           <img src={tailwindLogo} className="absolute bottom-0 left-1/2 w-16 h-16 -translate-x-1/2 rounded-full shadow-lg shadow-sky-400/40" />

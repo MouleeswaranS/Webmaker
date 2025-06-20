@@ -9,12 +9,20 @@ const Navbar = ({ loading }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
 
   const toggleMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+  const openContactModal = () => setShowContactModal(true);
+  const closeContactModal = () => setShowContactModal(false);
 
   const menuItems = [
-    'Home', 'About us', 'Our Services',
-    'Portfolio', 'Pricing', 'Shop', 'Contact us',
+    { name: 'Home', href: '#Home' },
+    { name: 'About us', href: '#AboutUs' },
+    { name: 'Our Services', href: '#Service' },
+    { name: 'Portfolio', href: '#Portfolio' },
+    { name: 'Pricing', href: '#Pricing' },
+    { name: 'Shop', href: '#Shop' },
+    { name: 'Contact us', href: '#Contact' },
   ];
 
   useEffect(() => {
@@ -25,135 +33,176 @@ const Navbar = ({ loading }) => {
   }, [loading]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 100);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <AnimatePresence>
-      {showNavbar && (
-        <motion.div
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -30 }}
-          transition={{ duration: 1 }}
-          className={`w-full top-0 left-0 z-50 fixed transition-all duration-500 ${
-            isScrolled ? 'backdrop-blur-lg bg-white/80 shadow-lg scale-[0.98]' : ''
-          }`}
-        >
-          {/* Top Contact Bar */}
-          <div className="w-full bg-white text-black text-sm flex justify-between px-6 py-2 font-medium">
-            <div className="flex items-center space-x-2">
-              <FaLocationDot className="text-purple-600" />
-              <span>Pondicherry</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <FaPhone className="text-green-600" />
-              <span>+91 96262 66254</span>
-            </div>
-          </div>
+    <>
+      <AnimatePresence>
+        {showNavbar && (
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={{ duration: 1 }}
+            className={`w-[95%] fixed top-4 left-1/2 -translate-x-1/2 z-[999] transition-all duration-500 ${
+              isScrolled
+                ? 'bg-black shadow-lg scale-[0.98] rounded-full'
+                : 'bg-black rounded-full'
+            }`}
+          >
+            {!isScrolled && (
+              <div className="w-full bg-white text-black text-sm flex justify-between px-6 py-2 font-medium rounded-t-full">
+                <div className="flex items-center space-x-2">
+                  <FaLocationDot className="text-purple-600" />
+                  <span>Pondicherry</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <FaPhone className="text-green-600" />
+                  <span>+91 96262 66254</span>
+                </div>
+              </div>
+            )}
 
-          {/* Main Navbar */}
-<nav className="w-[92%] mx-auto px-6 py-7 flex items-center justify-between bg-black text-gray-50 rounded-full">
-            {/* Logo */}
-            <div className="flex items-center space-x-2 cursor-hover-target">
-              <img src={logo} alt="Logo" className="h-10 w-auto rounded-full" />
-              <span className="font-bold text-xl"> Web Makerz </span>
-            </div>
+            <nav className="w-[92%] mx-auto px-9 py-6 flex items-center justify-between bg-black text-gray-50 rounded-full">
+              <div className="flex items-center space-x-2 cursor-pointer">
+                <img src={logo} alt="Logo" className="h-10 w-auto rounded-full" />
+                <span className="font-bold text-xl">Web Makerz</span>
+              </div>
 
-            {/* Menu items */}
-            <ul className="hidden md:flex space-x-6 text-3xl font-semibold">
-              {menuItems.map((item) => (
-                <li key={item}>
-                  <a
-                    href="#Home"
-                    className="cursor-hover-target hover:text-pink-400 transition text-white text-2xl"
-                  >
+              <ul className="hidden md:flex space-x-6 text-xl font-semibold">
+                {menuItems.map((item) => (
+                  <li key={item.name}>
                     <a
-                    href="#About Us"
-                    className="cursor-hover-target hover:text-pink-400 transition text-white text-2xl"
-                  >
-                    <a
-                    href="#Service"
-                    className="cursor-hover-target hover:text-pink-400 transition text-white text-2xl"
-                  >
-                    <a
-                    href="#Home"
-                    className="cursor-hover-target hover:text-pink-400 transition text-white text-2xl"
-                  >
-                    <a
-                    href="#Home"
-                    className="cursor-hover-target hover:text-pink-400 transition text-white text-2xl"
-                  >
+                      href={item.href}
+                      className="hover:text-pink-400 transition text-white"
+                    >
+                      {item.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
 
-                  </a>
-                  </a>
-                  </a>
-                  </a>
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
+              <div className="hidden md:flex">
+                <button
+                  onClick={openContactModal}
+                  className="bg-white text-black font-medium px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-gray-200 transition"
+                >
+                  <span>Contact us</span>
+                  <FaArrowRight />
+                </button>
+              </div>
 
-            {/* Contact Button */}
-            <div className="hidden md:flex">
-              <button className="cursor-hover-target bg-white text-black font-medium px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-gray-200 transition">
-                <span className="cursor-pointer">Contact us</span>
-                <FaArrowRight />
+              <button
+                onClick={toggleMenu}
+                className="md:hidden text-white text-3xl z-50 cursor-pointer absolute right-6 top-[4.3rem]"
+              >
+                {mobileMenuOpen ? <FaTimes /> : <FaBars />}
               </button>
-            </div>
 
-            {/* Mobile toggle button */}
-{/* Mobile toggle button */}
-<button
-  onClick={toggleMenu}
-  className="md:hidden text-white text-3xl z-50 cursor-pointer absolute right-6 top-[4.3rem]"
->
-  {mobileMenuOpen ? <FaTimes /> : <FaBars />}
-</button>
+              <AnimatePresence>
+                {mobileMenuOpen && (
+                  <motion.div
+                    initial={{ x: '100%' }}
+                    animate={{ x: 0 }}
+                    exit={{ x: '100%' }}
+                    transition={{ duration: 0.4, ease: 'easeInOut' }}
+                    className="md:hidden fixed top-0 right-0 h-full w-3/4 bg-black text-white z-40 px-6 pt-24"
+                  >
+                    <ul className="flex flex-col space-y-6 text-xl font-semibold">
+                      {menuItems.map((item) => (
+                        <li key={item.name}>
+                          <a
+                            href={item.href}
+                            onClick={toggleMenu}
+                            className="hover:text-pink-400 transition"
+                          >
+                            {item.name}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      onClick={() => {
+                        toggleMenu();
+                        openContactModal();
+                      }}
+                      className="mt-8 bg-white text-black font-medium px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-gray-200 transition"
+                    >
+                      <span className="cursor-pointer">Contact us</span>
+                      <FaArrowRight />
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-{/* Mobile Menu Drawer */}
-<AnimatePresence>
-  {mobileMenuOpen && (
-    <motion.div
-      initial={{ x: '100%' }}
-      animate={{ x: 0 }}
-      exit={{ x: '100%' }}
-      transition={{ duration: 0.4, ease: 'easeInOut' }}
-      className="md:hidden fixed top-0 right-0 h-full w-3/4 bg-black text-white z-40 px-6 pt-24"
-    >
-      <ul className="flex flex-col space-y-6 text-xl font-semibold">
-        {menuItems.map((item) => (
-          <li key={item}>
-            <a
-              href={`#${item.replace(/\s+/g, '')}`}
-              onClick={toggleMenu}
-              className="cursor-hover-target hover:text-pink-400 transition"
+      {/* 🔥 Stunning Contact Modal */}
+      <AnimatePresence>
+        {showContactModal && (
+          <motion.div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeContactModal}
+          >
+            <motion.div
+              className="relative w-[90%] max-w-md rounded-2xl p-6 shadow-2xl text-white bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-700 via-pink-500 to-yellow-400 backdrop-blur-lg border border-white/20 overflow-hidden"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 20, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={(e) => e.stopPropagation()}
             >
-              {item}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <button
-        onClick={toggleMenu}
-        className="mt-8 bg-white text-black font-medium px-4 py-2 rounded-full flex items-center space-x-2 hover:bg-gray-200 transition"
-      >
-        <span className="cursor-pointer">Contact us</span>
-        <FaArrowRight />
-      </button>
-    </motion.div>
-  )}
-</AnimatePresence>
-        </nav>
-      </motion.div>
-      )}
-    </AnimatePresence>
+              {/* Animated background swirl */}
+              <div className="absolute inset-0 z-0 opacity-30 bg-[conic-gradient(from_180deg_at_50%_50%,#ff00cc,#3333ff,#ffcc00,#ff00cc)] animate-spin-slow rounded-2xl blur-2xl"></div>
+
+              <button
+                className="absolute top-3 right-3 text-white text-lg z-10"
+                onClick={closeContactModal}
+              >
+                <FaTimes />
+              </button>
+
+              <h2 className="text-2xl font-bold mb-4 text-center relative z-10">Contact Us</h2>
+
+              <div className="space-y-4 relative z-10">
+                <input
+                  type="text"
+                  placeholder="Your phone number"
+                  className="w-full p-2 bg-white/10 text-white border border-white/30 rounded focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-white"
+                />
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="w-full p-2 bg-white/10 text-white border border-white/30 rounded focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-white"
+                />
+                <textarea
+                  placeholder="Your message..."
+                  rows="4"
+                  className="w-full p-2 bg-white/10 text-white border border-white/30 rounded focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-white"
+                />
+                <button
+                  className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition w-full font-semibold"
+                  onClick={() => {
+                    alert('Submitted!');
+                    closeContactModal();
+                  }}
+                >
+                  Submit
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 

@@ -2,16 +2,20 @@ import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import PropTypes from "prop-types";
-import ColorfulBackground from "./VantaHaloBackground";
 
 const ServiceCard = ({ service, index }) => {
   const cardRef = useRef(null);
+  const imageRef = useRef(null);
+  const titleRef = useRef(null);
+  const descRef = useRef(null);
+
   const navigate = useNavigate();
   const [inView, setInView] = useState(false);
+  const [hasAnimatedIn, setHasAnimatedIn] = useState(false);
 
   const col = index % 3;
+  const row = Math.floor(index / 3);
 
-  // Entry trigger
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -21,44 +25,59 @@ const ServiceCard = ({ service, index }) => {
     );
 
     if (cardRef.current) observer.observe(cardRef.current);
-    return () => {
-      if (cardRef.current) observer.unobserve(cardRef.current);
-    };
+    return () => observer.disconnect();
   }, []);
 
-  // Entry animation
   useEffect(() => {
-    if (inView) {
+    if (inView && cardRef.current && !hasAnimatedIn) {
+      const delay = row * 0.25 + col * 0.15;
+
       gsap.fromTo(
         cardRef.current,
-        { opacity: 0, y: 60, scale: 0.9 },
+        { opacity: 0, y: 80, filter: "blur(12px)" },
         {
           opacity: 1,
           y: 0,
-          scale: 1,
-          duration: 1,
-          delay: index * 0.15,
-          ease: "power3.out",
+          filter: "blur(0px)",
+          duration: 1.2,
+          delay,
+          ease: "power4.out",
         }
       );
+
+      gsap.from(imageRef.current, {
+        opacity: 0,
+        scale: 0.95,
+        y: 30,
+        delay: delay + 0.2,
+        duration: 1,
+        ease: "expo.out",
+      });
+
+      gsap.from(titleRef.current, {
+        opacity: 0,
+        x: -60,
+        delay: delay + 0.4,
+        duration: 1,
+        ease: "expo.out",
+      });
+
+      gsap.from(descRef.current, {
+        opacity: 0,
+        x: 60,
+        delay: delay + 0.55,
+        duration: 1,
+        ease: "expo.out",
+        onComplete: () => setHasAnimatedIn(true),
+      });
     }
-  }, [inView, index]);
+  }, [inView, hasAnimatedIn]);
 
-  // Hover 3D tilt effect
-  const handleMouseMove = (e) => {
-    const card = cardRef.current;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateY = ((x - centerX) / centerX) * 12;
-    const rotateX = ((centerY - y) / centerY) * 12;
-
-    gsap.to(card, {
-      rotateX,
-      rotateY,
-      scale: 1.07,
+  const handleMouseEnter = () => {
+    gsap.to(cardRef.current, {
+      scale: 1.03,
+      y: -8,
+      boxShadow: "0 0 25px rgba(0, 255, 255, 0.35)",
       duration: 0.4,
       ease: "power3.out",
     });
@@ -66,89 +85,69 @@ const ServiceCard = ({ service, index }) => {
 
   const handleMouseLeave = () => {
     gsap.to(cardRef.current, {
-      rotateX: 0,
-      rotateY: 0,
       scale: 1,
+      y: 0,
+      boxShadow: "0 8px 24px rgba(0, 0, 0, 0.5)",
       duration: 0.4,
       ease: "power3.out",
+      clearProps: "scale,y,boxShadow",
     });
   };
 
   const handleClick = () => {
-    const tl = gsap.timeline({
+    gsap.to(cardRef.current, {
+      opacity: 0,
+      y: -40,
+      duration: 0.4,
+      ease: "power2.inOut",
       onComplete: () => navigate(`/services/${service.id}`),
     });
-
-    const exitAnim = {
-      x: col === 0 ? -300 : col === 2 ? 300 : 0,
-      scale: col === 1 ? 0 : 1,
-      opacity: 0,
-      duration: 0.6,
-      ease: col === 1 ? "back.in(1.5)" : "power2.inOut",
-    };
-
-    tl.to(cardRef.current, exitAnim);
   };
 
   return (
     <div
       ref={cardRef}
-      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       style={{
-        perspective: "1000px",
-        transformStyle: "preserve-3d",
-        padding: "1.5rem",
-        borderRadius: "1.5rem",
-        background: `
-          linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1)),
-          radial-gradient(circle at top left, rgba(255, 255, 255, 0.15), transparent 60%)
-        `,
-        border: "1px solid rgba(255, 255, 255, 0.15)",
-        boxShadow: `
-          0 15px 35px rgba(0, 0, 0, 0.4),
-          inset 0 0 30px rgba(255, 255, 255, 0.05),
-          0 0 15px rgba(255, 255, 255, 0.05)
-        `,
-        backdropFilter: "blur(18px)",
-        WebkitBackdropFilter: "blur(18px)",
+        margin: "2rem auto",
+        width: "100%",
+        maxWidth: "620px",
+        backgroundColor: "#1f1f1f",
         color: "#fff",
-        cursor: "pointer",
-        height: "100%",
-        transition: "transform 0.3s ease",
-        willChange: "transform",
-        transformOrigin: "center",
+        borderRadius: "1rem",
         overflow: "hidden",
-        position: "relative",
+        cursor: "pointer",
+        boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
+        willChange: "transform, box-shadow, opacity",
+        opacity: 0,
       }}
     >
-      {/* Optional Glow Overlay */}
-      <div
+      <img
+        ref={imageRef}
+        src={service?.image}
+        alt={service?.title}
         style={{
-          position: "absolute",
-          top: "-40%",
-          left: "-40%",
-          width: "180%",
-          height: "180%",
-          background: "radial-gradient(circle, rgba(255,255,255,0.06), transparent 60%)",
-          pointerEvents: "none",
-          zIndex: 0,
+          width: "100%",
+          height: "220px",
+          objectFit: "cover",
+          display: "block",
         }}
       />
-      <div style={{ position: "relative", zIndex: 1 }}>
+
+      <div style={{ padding: "1.5rem" }}>
         <h3
-          style={{
-            fontSize: "1.5rem",
-            fontWeight: "700",
-            marginBottom: "0.5rem",
-          }}
+          ref={titleRef}
+          style={{ fontSize: "1.8rem", fontWeight: "bold", marginBottom: "1rem" }}
         >
-          
-          {service.title}
+          {service?.title}
         </h3>
-        <p style={{ opacity: 0.85, lineHeight: 1.6 }}>
-          {service.description.slice(0, 90)}...
+        <p
+          ref={descRef}
+          style={{ fontSize: "1rem", color: "#ccc", lineHeight: "1.6" }}
+        >
+          {service?.description?.slice(0, 160)}...
         </p>
       </div>
     </div>
@@ -160,6 +159,7 @@ ServiceCard.propTypes = {
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
   }).isRequired,
   index: PropTypes.number.isRequired,
 };
