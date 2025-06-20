@@ -1,128 +1,135 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
+import * as THREE from "three";
 import gsap from "gsap";
-import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
 
 const plans = [
-  {
-    title: "Starter",
-    price: "₹3,000",
-    features: [
-      "Responsive Single Page",
-      "Free Domain (1 Yr)",
-      "Hosting (1 Yr)",
-    ],
-    popular: false,
-  },
-  {
-    title: "Professional",
-    price: "₹6,000",
-    features: [
-      "All Starter Features",
-      "Google My Business",
-      "Digital Visiting Card",
-      "SEO Optimized",
-    ],
-    popular: true,
-  },
-  {
-    title: "Ultimate",
-    price: "₹12,000",
-    features: [
-      "Everything in Pro",
-      "Blog Integration",
-      "Custom Animations",
-      "Priority Support",
-    ],
-    popular: false,
-  },
+  { title: "Starter", price: "₹3,000", features: ["Responsive Single Page", "Free Domain (1 Yr)", "Hosting (1 Yr)"], popular: false },
+  { title: "Professional", price: "₹6,000", features: ["All Starter Features", "Google My Business", "Digital Visiting Card", "SEO Optimized"], popular: true },
+  { title: "Ultimate", price: "₹12,000", features: ["Everything in Pro", "Blog Integration", "Custom Animations", "Priority Support"], popular: false },
 ];
 
 const PricingSection = () => {
   const sectionRef = useRef(null);
+  const canvasRef = useRef(null);
   const cardsRef = useRef([]);
-  const [visible, setVisible] = useState(false);
-
-  // Initialize tsparticles
-  const particlesInit = async (main) => {
-    await loadFull(main);
-  };
 
   useEffect(() => {
     const style = document.createElement("style");
     style.innerHTML = `
       .pricing-section {
-        padding: 8rem 1rem 6rem;
         position: relative;
         overflow: hidden;
-        background: linear-gradient(135deg, #fefefe, #f5f7fa);
-        color: #111;
+        background: #000;
+        color: white;
+        padding: 8rem 1rem 6rem;
+        text-align: center;
       }
 
-      .animated-background {
+      canvas.fly-bg {
         position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle at 30% 30%, #ff9ff3, #feca57, #48dbfb, #1dd1a1);
-        background-size: 400% 400%;
-        animation: gradientAnimation 25s ease infinite;
-        z-index: -1;
-        filter: blur(80px);
-        opacity: 0.12;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 0;
       }
 
-      @keyframes gradientAnimation {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-      }
-
-      .pricing-title {
+      .gradient-heading {
         font-size: 2.8rem;
         font-weight: 800;
-        text-align: center;
-        margin-bottom: 0.5rem;
-        color: #222;
+        position: relative;
+        display: inline-block;
+        color: transparent;
+        background-image: linear-gradient(90deg, #ff6ec4, #7873f5);
+        -webkit-background-clip: text;
+        background-clip: text;
+        margin-bottom: 1rem;
+      }
+
+      .gradient-heading::after {
+        content: '';
+        position: absolute;
+        top: 0; left: -75%;
+        height: 100%;
+        width: 50%;
+        background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+        transform: skewX(-20deg);
+        animation: shimmer 2.5s infinite;
+      }
+
+      @keyframes shimmer {
+        0% { left: -75%; }
+        100% { left: 125%; }
       }
 
       .pricing-subtitle {
-        text-align: center;
-        font-size: 1.3rem;
-        margin-bottom: 3rem;
-        color: #555;
+        font-size: 1.2rem;
+        color: #ccc;
+        margin-bottom: 1rem;
+      }
+
+      .pricing-links a {
+        margin: 0 1rem;
+        color: #ff6ec4;
+        font-weight: 600;
+        text-decoration: underline;
       }
 
       .pricing-cards {
+        position: relative;
+        z-index: 1;
         display: grid;
         gap: 2rem;
         grid-template-columns: 1fr;
         max-width: 1200px;
-        margin: 0 auto;
+        margin: 3rem auto 0;
         padding: 0 1rem;
       }
 
-      @media (min-width: 768px) {
-        .pricing-cards {
-          grid-template-columns: repeat(3, 1fr);
+      @media(min-width:768px){ .pricing-cards { grid-template-columns:repeat(3,1fr); } }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
         }
       }
 
       .pricing-card {
-        background: #fff;
+        background: linear-gradient(135deg, #09FFD6FF, #02335DFF, #5F0462FF, #150DFAFF);
+        background-size: 300% 300%;
+        animation: gradientShift 10s ease infinite;
+        border: 1px solid rgba(255,255,255,0.1);
         border-radius: 20px;
         padding: 2rem;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s, box-shadow 0.3s;
+        transform-style: preserve-3d;
+        transform-origin: center;
         position: relative;
-        border: 1px solid #eee;
-        will-change: transform;
-        perspective: 1000px;
+        overflow: hidden;
       }
 
       .pricing-card:hover {
-        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      }
+
+      .pricing-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        border-radius: inherit;
+        z-index: 0;
+      }
+
+      .pricing-card > * {
+        position: relative;
+        z-index: 1;
       }
 
       .popular-badge {
@@ -131,156 +138,149 @@ const PricingSection = () => {
         right: 16px;
         background: #00c897;
         color: white;
+        padding: 0.3rem 0.7rem;
         font-size: 0.75rem;
         font-weight: 600;
-        padding: 0.3rem 0.7rem;
         border-radius: 999px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       }
 
       .plan-title {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
         font-weight: 700;
-        margin-bottom: 0.7rem;
       }
 
       .plan-price {
-        font-size: 2.2rem;
+        font-size: 2rem;
+        margin-bottom: 1rem;
         font-weight: 800;
-        margin-bottom: 1.5rem;
-        color: #222;
       }
 
       .feature-list {
         list-style: none;
         padding: 0;
-        margin: 0 0 2rem 0;
+        margin: 0 0 1.5rem;
+        color: #fff;
       }
 
       .feature-item {
-        margin-bottom: 0.8rem;
-        font-size: 1rem;
-        color: #444;
+        margin-bottom: 0.6rem;
       }
 
       .choose-button {
         background: linear-gradient(to right, #00b894, #00cec9);
+        padding: 1rem;
         border: none;
-        padding: 1rem 1.2rem;
-        width: 100%;
-        border-radius: 12px;
-        font-size: 1.2rem;
-        font-weight: 600;
         color: #fff;
+        font-weight: 600;
+        border-radius: 12px;
+        width: 100%;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: transform 0.3s;
       }
 
       .choose-button:hover {
-        background: linear-gradient(to left, #00b894, #00cec9);
         transform: scale(1.05);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
       }
     `;
     document.head.appendChild(style);
+  }, []);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        gsap.fromTo(
+          cardsRef.current,
+          {
+            opacity: 0,
+            scale: 0.5,
+            y: 100,
+          },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 1,
+            ease: "expo.out",
+            stagger: 0.2,
+          }
+        );
+        observer.disconnect();
+      }
+    }, { threshold: 0.3 });
 
-          gsap.fromTo(
-            cardsRef.current,
-            { opacity: 0, y: 100, scale: 0.9, rotateX: 15 },
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              rotateX: 0,
-              duration: 1.5,
-              ease: "elastic.out(1, 0.6)",
-              stagger: 0.4,
-            }
-          );
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  // Parallax Mouse Movement
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      cardsRef.current.forEach((card) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        const rotateX = -(y / rect.height) * 10;
-        const rotateY = (x / rect.width) * 10;
+    const canvas = canvasRef.current;
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
 
-        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
+    camera.position.z = 5;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(w, h);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    const cubeCount = 200;
+    const cubes = [];
+    const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+    const material = new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 0.5 });
+
+    for (let i = 0; i < cubeCount; i++) {
+      const cube = new THREE.Mesh(geometry, material);
+      cube.position.set((Math.random() - 0.5) * 50, (Math.random() - 0.5) * 30, -Math.random() * 200);
+      scene.add(cube);
+      cubes.push(cube);
+    }
+
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(10, 10, 10);
+    scene.add(light);
+
+    const animate = () => {
+      requestAnimationFrame(animate);
+      cubes.forEach(c => {
+        c.position.z += 0.5;
+        if (c.position.z > 10) {
+          c.position.z = -200;
+          c.position.x = (Math.random() - 0.5) * 50;
+          c.position.y = (Math.random() - 0.5) * 30;
+        }
       });
+      renderer.render(scene, camera);
     };
+    animate();
 
-    const handleMouseLeave = () => {
-      cardsRef.current.forEach((card) => {
-        card.style.transform = `rotateX(0deg) rotateY(0deg)`;
-      });
+    const onResize = () => {
+      const W = canvas.clientWidth;
+      const H = canvas.clientHeight;
+      renderer.setSize(W, H);
+      camera.aspect = W / H;
+      camera.updateProjectionMatrix();
     };
-
-    sectionRef.current.addEventListener("mousemove", handleMouseMove);
-    sectionRef.current.addEventListener("mouseleave", handleMouseLeave);
-
-    return () => {
-      sectionRef.current?.removeEventListener("mousemove", handleMouseMove);
-      sectionRef.current?.removeEventListener("mouseleave", handleMouseLeave);
-    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   return (
-    <section className="pricing-section" id="pricing" ref={sectionRef}>
-      <div className="animated-background"></div>
-
-      <Particles
-        id="tsparticles"
-        init={particlesInit}
-        options={{
-          fullScreen: false,
-          background: { color: "transparent" },
-          fpsLimit: 60,
-          particles: {
-            number: { value: 30 },
-            size: { value: 3 },
-            move: { enable: true, speed: 0.5 },
-            opacity: { value: 0.4 },
-            color: { value: "#ffffff" },
-            shape: { type: "circle" },
-          },
-        }}
-        style={{ position: "absolute", inset: 0, zIndex: -1 }}
-      />
-
-      <h2 className="pricing-title">Affordable Pricing</h2>
-      <p className="pricing-subtitle">
-        Transparent plans tailored for your business growth.
-      </p>
-
+    <section ref={sectionRef} className="pricing-section">
+      <canvas ref={canvasRef} className="fly-bg" />
+      <h2 className="gradient-heading">We give you best <br /> Price Table Package</h2>
+      <p className="pricing-subtitle">Best Plan for Website Design & Branding & Business Presence</p>
+      <div className="pricing-links">
+        <a href="#design">Combo Website Designing</a>
+        <a href="#renew">Combo Website Renewal</a>
+      </div>
       <div className="pricing-cards">
         {plans.map((plan, index) => (
-          <div
-            key={index}
-            className="pricing-card"
-            ref={(el) => (cardsRef.current[index] = el)}
-          >
+          <div key={index} className="pricing-card" ref={el => (cardsRef.current[index] = el)}>
             {plan.popular && <div className="popular-badge">Most Popular</div>}
-            <h3 className="plan-title">{plan.title}</h3>
+            <div className="plan-title">{plan.title}</div>
             <div className="plan-price">{plan.price}</div>
             <ul className="feature-list">
               {plan.features.map((feature, i) => (
