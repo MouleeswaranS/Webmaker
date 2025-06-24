@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPhone, FaArrowRight, FaBars, FaTimes } from 'react-icons/fa';
 import { FaLocationDot } from 'react-icons/fa6';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/Webmaker-Icon-01.jpg';
 import PropTypes from 'prop-types';
 
@@ -10,19 +11,20 @@ const Navbar = ({ loading }) => {
   const [showNavbar, setShowNavbar] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
+  const location = useLocation();
 
   const toggleMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const openContactModal = () => setShowContactModal(true);
   const closeContactModal = () => setShowContactModal(false);
 
   const menuItems = [
-    { name: 'Home', href: '#Home' },
-    { name: 'About us', href: '#AboutUs' },
-    { name: 'Our Services', href: '#Service' },
-    { name: 'Portfolio', href: '#Portfolio' },
-    { name: 'Pricing', href: '#Pricing' },
-    { name: 'Shop', href: '#Shop' },
-    { name: 'Contact us', href: '#Contact' },
+    { name: 'Home', to: '/' },
+    { name: 'About us', to: '/about' },
+    { name: 'Our Services', to: '/services' },
+    { name: 'Portfolio', to: '/portfolio' },
+    { name: 'Pricing', to: '/pricing' },
+    { name: 'Shop', to: '/shop' },
+    { name: 'Contact us', to: '/contact' },
   ];
 
   useEffect(() => {
@@ -38,6 +40,10 @@ const Navbar = ({ loading }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location]);
+
   return (
     <>
       <AnimatePresence>
@@ -47,11 +53,7 @@ const Navbar = ({ loading }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
             transition={{ duration: 1 }}
-            className={`w-[95%] fixed top-4 left-1/2 -translate-x-1/2 z-[999] transition-all duration-500 ${
-              isScrolled
-                ? 'bg-black shadow-lg scale-[0.98] rounded-full'
-                : 'bg-black rounded-full'
-            }`}
+            className={`w-[95%] fixed top-4 left-1/2 -translate-x-1/2 z-[999] transition-all duration-500 ${isScrolled ? 'bg-black shadow-lg scale-[0.98] rounded-full' : 'bg-black rounded-full'}`}
           >
             {!isScrolled && (
               <div className="w-full bg-white text-black text-sm flex justify-between px-6 py-2 font-medium rounded-t-full">
@@ -67,20 +69,26 @@ const Navbar = ({ loading }) => {
             )}
 
             <nav className="w-[92%] mx-auto px-9 py-6 flex items-center justify-between bg-black text-gray-50 rounded-full">
-              <div className="flex items-center space-x-2 cursor-pointer">
+              <Link to="/" className="flex items-center space-x-2 cursor-pointer">
                 <img src={logo} alt="Logo" className="h-10 w-auto rounded-full" />
                 <span className="font-bold text-xl">Web Makerz</span>
-              </div>
+              </Link>
 
               <ul className="hidden md:flex space-x-6 text-xl font-semibold">
                 {menuItems.map((item) => (
                   <li key={item.name}>
-                    <a
-                      href={item.href}
-                      className="hover:text-pink-400 transition text-white"
-                    >
-                      {item.name}
-                    </a>
+                    {item.name === 'Home' ? (
+                      <button
+                        className="hover:text-pink-400 transition text-white"
+                        onClick={() => window.location.href = '/'}
+                      >
+                        {item.name}
+                      </button>
+                    ) : (
+                      <Link to={item.to} className="hover:text-pink-400 transition text-white">
+                        {item.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -109,18 +117,30 @@ const Navbar = ({ loading }) => {
                     animate={{ x: 0 }}
                     exit={{ x: '100%' }}
                     transition={{ duration: 0.4, ease: 'easeInOut' }}
-                    className="md:hidden fixed top-0 right-0 h-full w-3/4 bg-black text-white z-40 px-6 pt-24"
+                    className="md:hidden fixed inset-0 bg-black bg-opacity-95 text-white z-40 px-6 pt-24"
                   >
                     <ul className="flex flex-col space-y-6 text-xl font-semibold">
                       {menuItems.map((item) => (
                         <li key={item.name}>
-                          <a
-                            href={item.href}
-                            onClick={toggleMenu}
-                            className="hover:text-pink-400 transition"
-                          >
-                            {item.name}
-                          </a>
+                          {item.name === 'Home' ? (
+                            <button
+                              className="hover:text-pink-400 transition text-white"
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                window.location.href = '/';
+                              }}
+                            >
+                              {item.name}
+                            </button>
+                          ) : (
+                            <Link
+                              to={item.to}
+                              className="hover:text-pink-400 transition"
+                              onClick={() => setMobileMenuOpen(false)}
+                            >
+                              {item.name}
+                            </Link>
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -142,7 +162,6 @@ const Navbar = ({ loading }) => {
         )}
       </AnimatePresence>
 
-      {/* 🔥 Stunning Contact Modal */}
       <AnimatePresence>
         {showContactModal && (
           <motion.div
@@ -160,36 +179,18 @@ const Navbar = ({ loading }) => {
               transition={{ duration: 0.3 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Animated background swirl */}
               <div className="absolute inset-0 z-0 opacity-30 bg-[conic-gradient(from_180deg_at_50%_50%,#ff00cc,#3333ff,#ffcc00,#ff00cc)] animate-spin-slow rounded-2xl blur-2xl"></div>
-
-              <button
-                className="absolute top-3 right-3 text-white text-lg z-10"
-                onClick={closeContactModal}
-              >
+              <button className="absolute top-3 right-3 text-white text-lg z-10" onClick={closeContactModal}>
                 <FaTimes />
               </button>
 
               <h2 className="text-2xl font-bold mb-4 text-center relative z-10">Contact Us</h2>
 
               <div className="space-y-4 relative z-10">
-                <input
-                  type="text"
-                  placeholder="Your phone number"
-                  className="w-full p-2 bg-white/10 text-white border border-white/30 rounded focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-white"
-                />
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  className="w-full p-2 bg-white/10 text-white border border-white/30 rounded focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-white"
-                />
-                <textarea
-                  placeholder="Your message..."
-                  rows="4"
-                  className="w-full p-2 bg-white/10 text-white border border-white/30 rounded focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-white"
-                />
-                <button
-                  className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition w-full font-semibold"
+                <input type="text" placeholder="Your phone number" className="w-full p-2 bg-white/10 text-white border border-white/30 rounded focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-white" />
+                <input type="email" placeholder="Your email address" className="w-full p-2 bg-white/10 text-white border border-white/30 rounded focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-white" />
+                <textarea placeholder="Your message..." rows="4" className="w-full p-2 bg-white/10 text-white border border-white/30 rounded focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-white" />
+                <button className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition w-full font-semibold"
                   onClick={() => {
                     alert('Submitted!');
                     closeContactModal();

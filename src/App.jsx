@@ -1,15 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import SecondSection from "./components/SecondSection";
+import AboutSection from "./components/AboutSection";
 import Cursor from "./components/Cursor";
 import Loading from "./components/Loading";
 import ServiceDetail from "./components/ServiceDetail";
 import ServiceSection from "./components/ServiceSection";
 import PortfolioSection from "./components/PortfolioSection";
 import PricingSection from "./components/PricingSection";
+
+import AboutPage from "./Pages/AboutPage";
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -25,22 +36,22 @@ function App() {
         {loading && <Loading />}
         {!loading && (
           <>
-            <Navbar />
+            <ScrollToTop />
+            <Navbar loading={loading} />
             <Routes>
               <Route
                 path="/"
                 element={
                   <>
                     <Hero />
-                    <SecondSection />
+                    <AboutSection />
                     <ServiceSection />
                     <PortfolioSection />
                     <PricingSection />
-
-                    {/* ✅ Use directly here */}
                   </>
                 }
               />
+              <Route path="/about" element={<AboutPage />} />
               <Route path="/services/:id" element={<ServiceDetail />} />
             </Routes>
           </>
