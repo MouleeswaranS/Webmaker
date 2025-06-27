@@ -1,7 +1,7 @@
 const plans = [
   {
     title: "Basic",
-    price: "$49.00 / Month",
+    price: "3000 / Month",
     description: "Great for trying out Schedule and for tiny teams",
     features: [
       "Unlimited Scheduling Pages",
@@ -15,7 +15,7 @@ const plans = [
   },
   {
     title: "Professional",
-    price: "$99.00 / Month",
+    price: "6000 / Month",
     description: "Best fit for growing sales teams and growth companies",
     features: [
       "Everything in Basic",
@@ -31,7 +31,7 @@ const plans = [
   },
   {
     title: "Enterprise",
-    price: "$299.00 / Month",
+    price: "9000 / Month",
     description:
       "Best for large companies and teams requiring high sales conversions",
     features: [

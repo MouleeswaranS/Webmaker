@@ -1,29 +1,32 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import plans from "../Data/plans";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const PricingSection = () => {
   const sectionRef = useRef(null);
   const cardsRef = useRef([]);
-  const [visible, setVisible] = useState(false);
 
   const particlesInit = async (main) => {
     await loadFull(main);
   };
 
   useEffect(() => {
+    // Inject styles
     const style = document.createElement("style");
     style.innerHTML = `
       .pricing-section {
         padding: 8rem 1rem 6rem;
         position: relative;
         overflow: hidden;
-        background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #fbc2eb, #a18cd1);
-        background-size: 600% 600%;
-        animation: gradientWave 30s ease infinite;
-        color: #111;
+        background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+        background-size: 400% 400%;
+        animation: gradientWave 20s ease infinite;
+        color: #333;
       }
 
       @keyframes gradientWave {
@@ -32,49 +35,29 @@ const PricingSection = () => {
         100% { background-position: 0% 50%; }
       }
 
-      .light-streak {
-        position: absolute;
-        top: -20%;
-        left: -60%;
-        width: 220%;
-        height: 200%;
-        background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2), transparent 60%);
-        transform: rotate(25deg);
-        animation: streakMove 15s ease-in-out infinite;
-        filter: blur(100px);
-        z-index: 0;
-        pointer-events: none;
-      }
-
-      @keyframes streakMove {
-        0% { transform: translateX(-60%) rotate(25deg); opacity: 0.1; }
-        50% { transform: translateX(10%) rotate(25deg); opacity: 0.2; }
-        100% { transform: translateX(60%) rotate(25deg); opacity: 0.1; }
-      }
-
       .pricing-title {
         font-size: 3rem;
         font-weight: 800;
         text-align: center;
         margin-bottom: 0.5rem;
-        position: relative;
+        color: #222;
         z-index: 2;
-        color: #fff;
+        position: relative;
       }
 
       .pricing-subtitle {
         text-align: center;
         font-size: 1.25rem;
         margin-bottom: 3rem;
-        color: #f0f0f0;
-        position: relative;
+        color: #444;
         z-index: 2;
+        position: relative;
       }
 
       .pricing-cards {
         display: grid;
         gap: 2rem;
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, 1fr);
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 1rem;
@@ -82,35 +65,20 @@ const PricingSection = () => {
         z-index: 2;
       }
 
-      @media (min-width: 768px) {
-        .pricing-cards {
-          grid-template-columns: repeat(3, 1fr);
-        }
-      }
-
       .pricing-card {
-        background: rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.3);
         border-radius: 20px;
         padding: 2rem;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         display: flex;
         flex-direction: column;
         gap: 1rem;
-        transform-style: preserve-3d;
-      }
-
-      .pricing-card:nth-child(2) {
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-      }
-
-      .pricing-card:nth-child(3) {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        height: 100%;
+        justify-content: space-between;
+        color: #222;
+        position: relative;
       }
 
       .popular-badge {
@@ -123,37 +91,40 @@ const PricingSection = () => {
         font-weight: 600;
         padding: 0.3rem 0.7rem;
         border-radius: 999px;
-        z-index: 2;
       }
 
       .plan-title {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
         font-weight: 700;
-        color: #fff;
+        color: #111;
+        text-align: center;
       }
 
       .plan-price {
-        font-size: 2.2rem;
+        font-size: 2.4rem;
         font-weight: 800;
-        color: #ffd166;
+        color: #333;
+        text-align: center;
       }
 
       .plan-description {
         font-size: 1rem;
-        color: #f0f0f0;
-        line-height: 1.5;
+        color: #444;
+        text-align: center;
       }
 
       .feature-list {
         list-style: none;
         padding: 0;
         margin: 0;
+        flex: 1;
       }
 
       .feature-item {
-        margin-bottom: 0.5rem;
         font-size: 1rem;
-        color: #eee;
+        color: #555;
+        text-align: center;
+        margin-bottom: 0.5rem;
       }
 
       .choose-button {
@@ -164,76 +135,116 @@ const PricingSection = () => {
         border-radius: 12px;
         font-size: 1.1rem;
         font-weight: 600;
-        color: #fff;
+        color: #111;
         cursor: pointer;
         transition: all 0.3s ease;
       }
 
       .choose-button:hover {
-        background: linear-gradient(to left, #00f2fe, #4facfe);
         transform: scale(1.05);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
       }
     `;
     document.head.appendChild(style);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
+    const title = sectionRef.current.querySelector(".pricing-title");
+    const subtitle = sectionRef.current.querySelector(".pricing-subtitle");
 
-          cardsRef.current.forEach((card, index) => {
-            const tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: index * 0.2 });
+    const loopTextAnimation = () => {
+      const tl = gsap.timeline();
+      tl.set(title, { y: "-100vh", opacity: 0 })
+        .set(subtitle, { y: "100vh", opacity: 0 })
+        .to(title, {
+          y: 0,
+          opacity: 1,
+          duration: 1.6,
+          ease: "power4.out",
+        })
+        .to(subtitle, {
+          y: 0,
+          opacity: 1,
+          duration: 1.6,
+          ease: "power4.out"
+        }, "-=1.3")
+        .to({}, { duration: 4.5 })
+        .to(title, {
+          y: "-100vh",
+          opacity: 0,
+          duration: 1.4,
+          ease: "power2.in"
+        })
+        .to(subtitle, {
+          y: "100vh",
+          opacity: 0,
+          duration: 1.4,
+          ease: "power2.in",
+          onComplete: loopTextAnimation
+        }, "-=1.2");
+    };
 
-            tl.from(card, {
-              y: -150,
-              opacity: 0,
-              duration: 1.2,
-              ease: "power4.out"
+    const runCardLoop = () => {
+      cardsRef.current.forEach((card, index) => {
+        const directions = [
+          { x: "-120vw", opacity: 0 },
+          { y: "-120vh", opacity: 0 },
+          { x: "120vw", opacity: 0 },
+        ];
+        const from = directions[index % directions.length];
+
+        const animateCard = () => {
+          const tl = gsap.timeline();
+
+          tl.set(card, from)
+            .to(card, {
+              x: 0,
+              y: 0,
+              opacity: 1,
+              duration: 1.6,
+              ease: "power4.out",
             })
-            .from(card.querySelector(".plan-title"), {
-              opacity: 0,
-              y: 40,
-              duration: 0.4,
+            .fromTo(card.querySelector(".plan-title"), { y: -50, opacity: 0 }, {
+              y: 0, opacity: 1, duration: 0.8, ease: "power2.out"
+            }, "-=1.0")
+            .fromTo(card.querySelector(".plan-price"), { x: -80, opacity: 0 }, {
+              x: 0, opacity: 1, duration: 0.8, ease: "power2.out"
+            }, "-=0.8")
+            .fromTo(card.querySelector(".plan-description"), { x: 80, opacity: 0 }, {
+              x: 0, opacity: 1, duration: 0.8, ease: "power2.out"
+            }, "-=0.8")
+            .fromTo(card.querySelectorAll(".feature-item"), { y: 40, opacity: 0 }, {
+              y: 0, opacity: 1, stagger: 0.1, duration: 0.6
             }, "-=0.6")
-            .from(card.querySelector(".plan-price"), {
-              opacity: 0,
-              y: 40,
-              duration: 0.4,
-            }, "-=0.5")
-            .from(card.querySelector(".plan-description"), {
-              opacity: 0,
-              y: 40,
-              duration: 0.4,
+            .fromTo(card.querySelector(".choose-button"), { y: 60, opacity: 0 }, {
+              y: 0, opacity: 1, duration: 1, ease: "elastic.out(1, 0.5)"
             }, "-=0.4")
-            .from(card.querySelectorAll(".feature-item"), {
+            .to({}, { duration: 4 })
+            .to(card, {
+              ...from,
               opacity: 0,
-              y: 30,
-              stagger: 0.08,
-              duration: 0.3,
-            }, "-=0.3")
-            .from(card.querySelector(".choose-button"), {
-              opacity: 0,
-              scale: 0.9,
-              duration: 0.4,
-            }, "-=0.2");
-          });
-        }
+              duration: 1.6,
+              ease: "power3.in",
+              onComplete: animateCard
+            });
+
+          return tl;
+        };
+
+        animateCard();
+      });
+    };
+
+    ScrollTrigger.create({
+      trigger: sectionRef.current,
+      start: "top 80%",
+      once: false,
+      onEnter: () => {
+        loopTextAnimation();
+        runCardLoop();
       },
-      { threshold: 0.2 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
+    });
   }, []);
 
   return (
     <section className="pricing-section" id="pricing" ref={sectionRef}>
-      <div className="light-streak" />
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -242,11 +253,11 @@ const PricingSection = () => {
           background: { color: "transparent" },
           fpsLimit: 60,
           particles: {
-            number: { value: 20 },
-            size: { value: 3 },
-            move: { enable: true, speed: 0.4 },
-            opacity: { value: 0.15 },
-            color: { value: "#ffffff" },
+            number: { value: 40 },
+            size: { value: { min: 1, max: 4 } },
+            move: { enable: true, speed: 0.6 },
+            opacity: { value: 0.1 },
+            color: { value: ["#ffffff", "#ffd166", "#00f2fe"] },
             shape: { type: "circle" },
           },
         }}
@@ -274,7 +285,9 @@ const PricingSection = () => {
                 <li key={i} className="feature-item">{feature}</li>
               ))}
             </ul>
-            <button className="choose-button">{plan.buttonText || "Start Plan"}</button>
+            <button className="choose-button">
+              {plan.buttonText || "Start Plan"}
+            </button>
           </div>
         ))}
       </div>

@@ -79,13 +79,20 @@ const Navbar = ({ loading }) => {
                   <li key={item.name}>
                     {item.name === 'Home' ? (
                       <button
-                        className="hover:text-pink-400 transition text-white"
+                        className="hover:text-pink-400 transition text-white cursor-pointer"
                         onClick={() => window.location.href = '/'}
                       >
                         {item.name}
                       </button>
+                    ) : item.name === 'Portfolio' ? (
+                      <button
+                        className="hover:text-pink-400 transition text-white cursor-pointer"
+                        onClick={() => window.location.href = '/portfolio'}
+                      >
+                        {item.name}
+                      </button>
                     ) : (
-                      <Link to={item.to} className="hover:text-pink-400 transition text-white">
+                      <Link to={item.to} className="hover:text-pink-400 transition text-white cursor-pointer">
                         {item.name}
                       </Link>
                     )}
@@ -124,7 +131,7 @@ const Navbar = ({ loading }) => {
                         <li key={item.name}>
                           {item.name === 'Home' ? (
                             <button
-                              className="hover:text-pink-400 transition text-white"
+                              className="hover:text-pink-400 transition text-white cursor-pointer"
                               onClick={() => {
                                 setMobileMenuOpen(false);
                                 window.location.href = '/';
@@ -132,10 +139,20 @@ const Navbar = ({ loading }) => {
                             >
                               {item.name}
                             </button>
+                          ) : item.name === 'Portfolio' ? (
+                            <button
+                              className="hover:text-pink-400 transition text-white cursor-pointer"
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                window.location.href = '/portfolio';
+                              }}
+                            >
+                              {item.name}
+                            </button>
                           ) : (
                             <Link
                               to={item.to}
-                              className="hover:text-pink-400 transition"
+                              className="hover:text-pink-400 transition text-white cursor-pointer"
                               onClick={() => setMobileMenuOpen(false)}
                             >
                               {item.name}
