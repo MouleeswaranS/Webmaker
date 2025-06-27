@@ -14,6 +14,7 @@ import AboutPage from "./Pages/AboutPage";
 import OurServicesPage from "./Pages/OurServicesPage";
 import serviceData from "./Data/serviceData"; // Import service data here
 import ServiceSection from "./components/ServiceSection"; // Import ServiceSection
+import PricingPage from "./Pages/PricingPage"; // Import PricingPage if needed
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -57,6 +58,7 @@ function App() {
               <Route path="/services" element={<OurServicesPage />} />
               <Route path="/services/:id" element={<ServiceDetail />} />
               <Route path="/portfolio" element={<PortfolioSection />} />
+              <Route path="/pricing" element={<PricingPage />} />
             </Routes>
           </>
         )}
