@@ -7,11 +7,13 @@ import AboutSection from "./components/AboutSection";
 import Cursor from "./components/Cursor";
 import Loading from "./components/Loading";
 import ServiceDetail from "./components/ServiceDetail";
-import ServiceSection from "./components/ServiceSection";
 import PortfolioSection from "./components/PortfolioSection";
 import PricingSection from "./components/PricingSection";
 
 import AboutPage from "./Pages/AboutPage";
+import OurServicesPage from "./Pages/OurServicesPage";
+import serviceData from "./Data/serviceData"; // Import service data here
+import ServiceSection from "./components/ServiceSection"; // Import ServiceSection
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -45,13 +47,14 @@ function App() {
                   <>
                     <Hero />
                     <AboutSection />
-                    <ServiceSection />
+                    <ServiceSection services={serviceData} />
                     <PortfolioSection />
                     <PricingSection />
                   </>
                 }
               />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/services" element={<OurServicesPage />} />
               <Route path="/services/:id" element={<ServiceDetail />} />
             </Routes>
           </>

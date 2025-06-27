@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import serviceData from "../Data/serviceData";
 
@@ -204,15 +204,20 @@ const ServiceDetail = () => {
             ))}
           </motion.ul>
 
-          {/* Button scale in smoothly */}
+          {/* Back to Services button with full page reload */}
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 1.6, duration: 0.9, ease: "easeOut" }}
           >
-            <Link to="/" className="gradient-button">
+            <button
+              onClick={() => {
+                window.location.href = "/services";
+              }}
+              className="gradient-button"
+            >
               ⬅ Back to Services
-            </Link>
+            </button>
           </motion.div>
         </motion.div>
       </div>

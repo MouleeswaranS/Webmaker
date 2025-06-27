@@ -2,48 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-
-const plans = [
-  {
-    title: "Starter",
-    price: "₹3,000",
-    features: [
-      "Responsive Single Page",
-      "Free Domain (1 Yr)",
-      "Hosting (1 Yr)",
-    ],
-    popular: false,
-  },
-  {
-    title: "Professional",
-    price: "₹6,000",
-    features: [
-      "All Starter Features",
-      "Google My Business",
-      "Digital Visiting Card",
-      "SEO Optimized",
-    ],
-    popular: true,
-  },
-  {
-    title: "Ultimate",
-    price: "₹12,000",
-    features: [
-      "Everything in Pro",
-      "Blog Integration",
-      "Custom Animations",
-      "Priority Support",
-    ],
-    popular: false,
-  },
-];
+import plans from "../Data/plans";
 
 const PricingSection = () => {
   const sectionRef = useRef(null);
   const cardsRef = useRef([]);
   const [visible, setVisible] = useState(false);
 
-  // Initialize tsparticles
   const particlesInit = async (main) => {
     await loadFull(main);
   };
@@ -55,43 +20,55 @@ const PricingSection = () => {
         padding: 8rem 1rem 6rem;
         position: relative;
         overflow: hidden;
-        background: linear-gradient(135deg, #fefefe, #f5f7fa);
+        background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #fbc2eb, #a18cd1);
+        background-size: 600% 600%;
+        animation: gradientWave 30s ease infinite;
         color: #111;
       }
 
-      .animated-background {
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle at 30% 30%, #ff9ff3, #feca57, #48dbfb, #1dd1a1);
-        background-size: 400% 400%;
-        animation: gradientAnimation 25s ease infinite;
-        z-index: -1;
-        filter: blur(80px);
-        opacity: 0.12;
-      }
-
-      @keyframes gradientAnimation {
+      @keyframes gradientWave {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
       }
 
+      .light-streak {
+        position: absolute;
+        top: -20%;
+        left: -60%;
+        width: 220%;
+        height: 200%;
+        background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2), transparent 60%);
+        transform: rotate(25deg);
+        animation: streakMove 15s ease-in-out infinite;
+        filter: blur(100px);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      @keyframes streakMove {
+        0% { transform: translateX(-60%) rotate(25deg); opacity: 0.1; }
+        50% { transform: translateX(10%) rotate(25deg); opacity: 0.2; }
+        100% { transform: translateX(60%) rotate(25deg); opacity: 0.1; }
+      }
+
       .pricing-title {
-        font-size: 2.8rem;
+        font-size: 3rem;
         font-weight: 800;
         text-align: center;
         margin-bottom: 0.5rem;
-        color: #222;
+        position: relative;
+        z-index: 2;
+        color: #fff;
       }
 
       .pricing-subtitle {
         text-align: center;
-        font-size: 1.3rem;
+        font-size: 1.25rem;
         margin-bottom: 3rem;
-        color: #555;
+        color: #f0f0f0;
+        position: relative;
+        z-index: 2;
       }
 
       .pricing-cards {
@@ -101,6 +78,8 @@ const PricingSection = () => {
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 1rem;
+        position: relative;
+        z-index: 2;
       }
 
       @media (min-width: 768px) {
@@ -110,66 +89,80 @@ const PricingSection = () => {
       }
 
       .pricing-card {
-        background: #fff;
+        background: rgba(255, 255, 255, 0.15);
         border-radius: 20px;
         padding: 2rem;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-        transition: transform 0.4s ease, box-shadow 0.4s ease;
-        position: relative;
-        border: 1px solid #eee;
-        will-change: transform;
-        perspective: 1000px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        transform-style: preserve-3d;
       }
 
-      .pricing-card:hover {
-        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      .pricing-card:nth-child(2) {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+      }
+
+      .pricing-card:nth-child(3) {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+        border: 1px solid rgba(255, 255, 255, 0.3);
       }
 
       .popular-badge {
         position: absolute;
         top: -12px;
         right: 16px;
-        background: #00c897;
+        background: #ff6b6b;
         color: white;
         font-size: 0.75rem;
         font-weight: 600;
         padding: 0.3rem 0.7rem;
         border-radius: 999px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        z-index: 2;
       }
 
       .plan-title {
         font-size: 1.5rem;
         font-weight: 700;
-        margin-bottom: 0.7rem;
+        color: #fff;
       }
 
       .plan-price {
         font-size: 2.2rem;
         font-weight: 800;
-        margin-bottom: 1.5rem;
-        color: #222;
+        color: #ffd166;
+      }
+
+      .plan-description {
+        font-size: 1rem;
+        color: #f0f0f0;
+        line-height: 1.5;
       }
 
       .feature-list {
         list-style: none;
         padding: 0;
-        margin: 0 0 2rem 0;
+        margin: 0;
       }
 
       .feature-item {
-        margin-bottom: 0.8rem;
+        margin-bottom: 0.5rem;
         font-size: 1rem;
-        color: #444;
+        color: #eee;
       }
 
       .choose-button {
-        background: linear-gradient(to right, #00b894, #00cec9);
+        background: linear-gradient(to right, #00f2fe, #4facfe);
         border: none;
         padding: 1rem 1.2rem;
         width: 100%;
         border-radius: 12px;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         font-weight: 600;
         color: #fff;
         cursor: pointer;
@@ -177,9 +170,9 @@ const PricingSection = () => {
       }
 
       .choose-button:hover {
-        background: linear-gradient(to left, #00b894, #00cec9);
+        background: linear-gradient(to left, #00f2fe, #4facfe);
         transform: scale(1.05);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
       }
     `;
     document.head.appendChild(style);
@@ -190,22 +183,45 @@ const PricingSection = () => {
           setVisible(true);
           observer.disconnect();
 
-          gsap.fromTo(
-            cardsRef.current,
-            { opacity: 0, y: 100, scale: 0.9, rotateX: 15 },
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              rotateX: 0,
-              duration: 1.5,
-              ease: "elastic.out(1, 0.6)",
-              stagger: 0.4,
-            }
-          );
+          cardsRef.current.forEach((card, index) => {
+            const tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: index * 0.2 });
+
+            tl.from(card, {
+              y: -150,
+              opacity: 0,
+              duration: 1.2,
+              ease: "power4.out"
+            })
+            .from(card.querySelector(".plan-title"), {
+              opacity: 0,
+              y: 40,
+              duration: 0.4,
+            }, "-=0.6")
+            .from(card.querySelector(".plan-price"), {
+              opacity: 0,
+              y: 40,
+              duration: 0.4,
+            }, "-=0.5")
+            .from(card.querySelector(".plan-description"), {
+              opacity: 0,
+              y: 40,
+              duration: 0.4,
+            }, "-=0.4")
+            .from(card.querySelectorAll(".feature-item"), {
+              opacity: 0,
+              y: 30,
+              stagger: 0.08,
+              duration: 0.3,
+            }, "-=0.3")
+            .from(card.querySelector(".choose-button"), {
+              opacity: 0,
+              scale: 0.9,
+              duration: 0.4,
+            }, "-=0.2");
+          });
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     );
 
     if (sectionRef.current) {
@@ -215,39 +231,9 @@ const PricingSection = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Parallax Mouse Movement
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      cardsRef.current.forEach((card) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        const rotateX = -(y / rect.height) * 10;
-        const rotateY = (x / rect.width) * 10;
-
-        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-      });
-    };
-
-    const handleMouseLeave = () => {
-      cardsRef.current.forEach((card) => {
-        card.style.transform = `rotateX(0deg) rotateY(0deg)`;
-      });
-    };
-
-    sectionRef.current.addEventListener("mousemove", handleMouseMove);
-    sectionRef.current.addEventListener("mouseleave", handleMouseLeave);
-
-    return () => {
-      sectionRef.current?.removeEventListener("mousemove", handleMouseMove);
-      sectionRef.current?.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, []);
-
   return (
     <section className="pricing-section" id="pricing" ref={sectionRef}>
-      <div className="animated-background"></div>
-
+      <div className="light-streak" />
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -256,20 +242,20 @@ const PricingSection = () => {
           background: { color: "transparent" },
           fpsLimit: 60,
           particles: {
-            number: { value: 30 },
+            number: { value: 20 },
             size: { value: 3 },
-            move: { enable: true, speed: 0.5 },
-            opacity: { value: 0.4 },
+            move: { enable: true, speed: 0.4 },
+            opacity: { value: 0.15 },
             color: { value: "#ffffff" },
             shape: { type: "circle" },
           },
         }}
-        style={{ position: "absolute", inset: 0, zIndex: -1 }}
+        style={{ position: "absolute", inset: 0, zIndex: 1 }}
       />
 
-      <h2 className="pricing-title">Affordable Pricing</h2>
+      <h2 className="pricing-title">Simple Pricing, Standout Result</h2>
       <p className="pricing-subtitle">
-        Transparent plans tailored for your business growth.
+        Start small, grow fast. Our pricing is as efficient as your sales team should be.
       </p>
 
       <div className="pricing-cards">
@@ -282,12 +268,13 @@ const PricingSection = () => {
             {plan.popular && <div className="popular-badge">Most Popular</div>}
             <h3 className="plan-title">{plan.title}</h3>
             <div className="plan-price">{plan.price}</div>
+            <p className="plan-description">{plan.description}</p>
             <ul className="feature-list">
               {plan.features.map((feature, i) => (
                 <li key={i} className="feature-item">{feature}</li>
               ))}
             </ul>
-            <button className="choose-button">Choose Plan</button>
+            <button className="choose-button">{plan.buttonText || "Start Plan"}</button>
           </div>
         ))}
       </div>
