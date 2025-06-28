@@ -3,7 +3,7 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import plans from "../Data/plans";
+import plans from "../Data/Plans";
 
 gsap.registerPlugin(ScrollTrigger);
 

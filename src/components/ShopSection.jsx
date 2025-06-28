@@ -1,6 +1,6 @@
 // ShopSection.jsx
 import React, { useState, useEffect, useRef } from "react";
-import shopItems from "../Data/shopData";
+import shopItems from "../Data/ShopData";
 import { FaLock, FaTimes } from "react-icons/fa";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

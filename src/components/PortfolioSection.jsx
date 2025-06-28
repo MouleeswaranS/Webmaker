@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import portfolioData from "../data/portfolioData";
+import portfolioData from "../Data/PortfolioData";
 import PortfolioCard from "./PortfolioCard";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
