@@ -9,12 +9,14 @@ import Loading from "./components/Loading";
 import ServiceDetail from "./components/ServiceDetail";
 import PortfolioSection from "./components/PortfolioSection";
 import PricingSection from "./components/PricingSection";
+import ShopSection from "./components/ShopSection";
 
 import AboutPage from "./Pages/AboutPage";
 import OurServicesPage from "./Pages/OurServicesPage";
 import serviceData from "./Data/serviceData"; // Import service data here
 import ServiceSection from "./components/ServiceSection"; // Import ServiceSection
 import PricingPage from "./Pages/PricingPage"; // Import PricingPage if needed
+
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -51,6 +53,7 @@ function App() {
                     <ServiceSection services={serviceData} />
                     <PortfolioSection />
                     <PricingSection />
+                    < ShopSection />
                   </>
                 }
               />
