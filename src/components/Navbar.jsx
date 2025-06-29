@@ -71,7 +71,7 @@ const Navbar = ({ loading }) => {
             <nav className="w-[92%] mx-auto px-9 py-6 flex items-center justify-between bg-black text-gray-50 rounded-full">
               <Link to="/" className="flex items-center space-x-2 cursor-pointer">
                 <img src={logo} alt="Logo" className="h-10 w-auto rounded-full" />
-                <span className="font-bold text-xl">Web Makerz</span>
+                <span className="font-bold text-xl">DevNest</span>
               </Link>
 
               <ul className="hidden md:flex space-x-6 text-xl font-semibold">

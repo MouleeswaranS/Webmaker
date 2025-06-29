@@ -46,7 +46,7 @@ const Loading = () => {
         className="loader-logo w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover"
       />
       <h1 className="loader-text text-3xl sm:text-5xl font-bold">
-        Webmakerz 
+        DevNest
       </h1>
       <p className="loader-text text-lg sm:text-xl text-gray-300">
         Crafting Modern Websites 
